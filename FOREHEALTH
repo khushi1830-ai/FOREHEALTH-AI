@@ -1,0 +1,24 @@
+function analyze() {
+  const data = {
+    sleep: Number(document.getElementById("sleep").value),
+    activity: Number(document.getElementById("activity").value),
+    diet: document.getElementById("diet").value,
+    stress: Number(document.getElementById("stress").value),
+    smoking: document.getElementById("smoking").value
+  };
+
+  fetch("https://YOUR-BACKEND-URL/analyze", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(result => {
+    document.getElementById("result").innerHTML = `
+      <h3>Overall Health Risk: ${result.overall_risk}%</h3>
+      <p><b>Diabetes Risk:</b> ${result.diabetes}%</p>
+      <p><b>Cardiac Risk:</b> ${result.cardiac}%</p>
+      <p><b>Advice:</b> ${result.advice}</p>
+    `;
+  });
+}
