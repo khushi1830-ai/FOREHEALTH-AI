@@ -1,0 +1,37 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route("/analyze", methods=["POST"])
+def analyze():
+    data = request.json
+
+    risk = 0
+
+    if data["sleep"] < 6:
+        risk += 15
+    if data["activity"] < 30:
+        risk += 20
+    if data["diet"] == "junk":
+        risk += 15
+    if data["stress"] > 6:
+        risk += 20
+    if data["smoking"] == "yes":
+        risk += 30
+
+    diabetes = min(risk + 10, 100)
+    cardiac = min(risk + 20, 100)
+
+    advice = "Improve sleep, exercise regularly, manage stress, and maintain a balanced diet."
+
+    return jsonify({
+        "overall_risk": min(risk, 100),
+        "diabetes": diabetes,
+        "cardiac": cardiac,
+        "advice": advice
+    })
+
+if __name__ == "__main__":
+    app.run()
